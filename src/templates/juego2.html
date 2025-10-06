@@ -3,13 +3,36 @@
 {% block title %} Piedra, papel o tijera {% endblock %}
 
 {% block style %}
-    <link rel="stylesheet" href="{{url_for('static', filename='Css/juego2.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='Css/juego2.css')}}">
 {% endblock %}
 
 {% block content %}
 
 <div class="container">
-    
+
+    <figure class="image">
+        <img src="{{url_for('static', filename='Img/figura-juegos.png')}}" alt="Figura de Juegos" srcset="" class="figure">
+    </figure>
+
+    <div class="wrapper">
+
+        <div class="game">
+            <button id="piedra" type="button">
+                <img src="{{url_for('static', filename='Img/rock.svg')}}" alt="">
+            </button>
+
+            <button id="papel" type="button">
+                <img src="{{url_for('static', filename='Img/paper.svg')}}" alt="">
+            </button>
+
+            <button id="tijera" type="button">
+                <img src="{{url_for('static', filename='Img/scissors.svg')}}" alt="">
+            </button>
+
+        </div>
+
+    </div>
+
 </div>
 
 {% endblock %}

@@ -12,5 +12,9 @@ def login():
 def juego1():
     return render_template('juego1.html')
 
+@app.route("/juego2")
+def juego2():
+    return render_template('juego2.html')
+
 if __name__ == "__main__":
     app.run(debug=True)
