@@ -16,5 +16,9 @@ def juego1():
 def juego2():
     return render_template('juego2.html')
 
+@app.route("/clothe")
+def clothe():
+    return render_template('clothe.html')
+
 if __name__ == "__main__":
     app.run(debug=True)

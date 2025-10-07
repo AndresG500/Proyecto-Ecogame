@@ -1,0 +1,20 @@
+{% extends './about.html' %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{url_for('static', filename='Css/clothe.css')}}">
+{% endblock %}
+
+{% block title %}Ropa{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <figure class="image">
+            <img src="{{url_for('static', filename='Img/figura.png')}}" alt="Figura de Juegos" srcset="" class="figure">
+        </figure>
+
+        <div class="container-clothe">
+            
+        </div>
+
+    </div>
+{% endblock %}
