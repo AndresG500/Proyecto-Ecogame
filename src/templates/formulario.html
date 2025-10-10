@@ -9,7 +9,12 @@
 
 {% block content %}
 
-<section class="cuerpo-Login">
+<div class="cuerpo-Login">
+
+    <figure>
+        <img src="{{url_for('static', filename='Img/figura-nueva')}}" alt="">
+    </figure>
+
     <div class="forms-wrapper">
         <div class="container-login" id="loginForm">
             <div class="container-form">
@@ -77,7 +82,7 @@
             </div>
         </div>
     </div>
-</section>
+</div>
 
 <script src="{{url_for('static', filename='Js/index.js')}}"></script>
 
