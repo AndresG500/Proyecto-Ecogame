@@ -1,0 +1,51 @@
+{% extends './about.html' %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{url_for('static', filename='Css/juego3.css')}}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        
+        <figure>
+            <img src="{{url_for('static', filename='Img/figura-juegos2.png')}}" alt="Figura" class="figure">
+        </figure>
+
+        <div class="wrapper">
+            <figure>
+                <img src="{{url_for('static', filename='Img/Diseño1.png')}}" alt="Escenario" srcset="" class="Escenario">
+            </figure>
+
+            <div class="fichas">
+                <figure>
+                    <img src="{{url_for('static', filename='Img/fichao.png')}}" alt="Ficha1" class="ficha">
+                </figure>
+
+                <figure>
+                    <img src="{{url_for('static', filename='Img/fichax.png')}}" alt="" srcset="">
+                </figure>
+
+            </div>
+
+            <div class="tablero">
+                <button class="casilla cs1" id="1" onclick="marcarCelda(1)"></button>
+                <button class="casilla cs2" id="2" onclick="marcarCelda(2)"></button>
+                <button class="casilla cs3" id="3" onclick="marcarCelda(3)"></button>
+                <button class="casilla cs4" id="4" onclick="marcarCelda(4)"></button>
+                <button class="casilla cs5" id="5" onclick="marcarCelda(5)"></button>
+                <button class="casilla cs6" id="6" onclick="marcarCelda(6)"></button>
+                <button class="casilla cs7" id="7" onclick="marcarCelda(7)"></button>
+                <button class="casilla cs8" id="8" onclick="marcarCelda(8)"></button>
+                <button class="casilla cs9" id="9" onclick="marcarCelda(9)"></button> 
+            </div>
+
+            <div id="mensaje-modal" class="modal">
+                <span id="cerrar-modal" class="cerrar">&times;</span>
+                <p id="texto-modal"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{url_for('static', filename='Js/juego3.js')}}"></script>
+    
+{% endblock %}

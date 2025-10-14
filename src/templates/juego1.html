@@ -1,0 +1,36 @@
+{% extends './about.html' %}
+
+{% block title %}Juego Snake{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{url_for('static', filename='Css/juego-snake.css')}}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <figure class="image">
+        <img src="{{url_for('static', filename='Img/figura-juegos.png')}}" alt="Figura de Juegos" srcset="" class="figure">
+    </figure>
+
+    <div class="wrapper">
+        <div class="game-details">
+            <div class="score">
+                <h3>Puntaje: 0</h3>
+            </div>
+
+            <div class="high-score">
+                <h3>Puntaje Máximo: 0</h3>
+            </div>
+        </div>
+
+        <div class="play-board"></div>
+
+    </div>
+
+</div>
+
+<script src="{{url_for('static', filename='Js/snake.js')}}"></script>
+
+{% endblock %}

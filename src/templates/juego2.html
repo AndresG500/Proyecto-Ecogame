@@ -1,0 +1,51 @@
+{% extends './about.html' %}
+
+{% block title %} Piedra, papel o tijera {% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{url_for('static', filename='Css/juego2.css')}}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="wrapper">
+
+        <h1>Piedra, Papel o Tijera</h1>
+
+        <div class="result">
+
+            <figure>
+                <img id="machine-img" src="{{url_for('static', filename='Img/rock.svg')}}" alt="">
+            </figure>
+
+            <figure>
+                <img id="user-img" src="{{url_for('static', filename='Img/rock.svg')}}" alt="">
+            </figure>
+        </div>
+
+        <div class="start-text" id="start-text">
+            <h3 style="font-weight: bold;">Elige una opcion</h3>
+        </div>
+
+        <div class="buttons">
+            <button id="piedra" type="button">
+                <img src="{{url_for('static', filename='Img/rock.svg')}}" alt="">
+            </button>
+
+            <button id="papel" type="button">
+                <img src="{{url_for('static', filename='Img/paper.svg')}}" alt="">
+            </button>
+
+            <button id="tijera" type="button">
+                <img src="{{url_for('static', filename='Img/scissors.svg')}}" alt="">
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="{{url_for('static', filename='Js/juego2.js')}}"></script>
+
+{% endblock %}

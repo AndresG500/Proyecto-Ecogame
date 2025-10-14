@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Ubicación - Mapa Interactivo</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .map-wrapper {
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        #map {
+            width: 100%;
+            height: 500px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .info-panel {
+            padding: 25px 30px;
+            background: white;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: transform 0.2s;
+        }
+
+        .info-item:hover {
+            transform: translateX(5px);
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 1.2em;
+        }
+
+        .info-content {
+            flex: 1;
+        }
+
+        .info-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 3px;
+        }
+
+        .info-value {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: #e74c3c;
+            font-size: 1.1em;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #27ae60;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin-top: 10px;
+        }
+
+        /* Personalización del popup de Leaflet */
+        .leaflet-popup-content-wrapper {
+            border-radius: 10px;
+        }
+
+        .leaflet-popup-content {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            #map {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📍 Mi Ubicación Actual</h1>
+            <p>Visualiza tu posición en tiempo real</p>
+            <span class="badge">✓ 100% Gratis - Sin límites</span>
+        </div>
+
+        <div class="map-wrapper">
+            <div id="loading" class="loading">
+                🔍 Obteniendo tu ubicación...
+            </div>
+            <div id="map"></div>
+        </div>
+
+        <div class="info-panel">
+            <div class="info-item">
+                <div class="info-icon">🌐</div>
+                <div class="info-content">
+                    <div class="info-label">Latitud</div>
+                    <div class="info-value" id="latitude">--</div>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon">🧭</div>
+                <div class="info-content">
+                    <div class="info-label">Longitud</div>
+                    <div class="info-value" id="longitude">--</div>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon">🎯</div>
+                <div class="info-content">
+                    <div class="info-label">Precisión</div>
+                    <div class="info-value" id="accuracy">--</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        let map;
+        let marker;
+        let accuracyCircle;
+
+        // Inicializar cuando se carga la página
+        window.onload = function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    showPosition,
+                    showError,
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                showError({ code: 0, message: "Geolocalización no soportada por este navegador" });
+            }
+        };
+
+        function showPosition(position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            const accuracy = position.coords.accuracy;
+
+            // Ocultar mensaje de carga y mostrar mapa
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('map').style.display = 'block';
+
+            // Actualizar información en el panel
+            document.getElementById('latitude').textContent = lat.toFixed(6);
+            document.getElementById('longitude').textContent = lng.toFixed(6);
+            document.getElementById('accuracy').textContent = `±${accuracy.toFixed(0)} metros`;
+
+            // Crear el mapa con Leaflet
+            map = L.map('map').setView([lat, lng], 15);
+
+            // Agregar capa de OpenStreetMap
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 19
+            }).addTo(map);
+
+            // Crear icono personalizado para el marcador
+            const customIcon = L.divIcon({
+                className: 'custom-marker',
+                html: `
+                    <div style="
+                        width: 30px;
+                        height: 30px;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        border: 3px solid white;
+                        border-radius: 50%;
+                        box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+                    "></div>
+                `,
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
+            });
+
+            // Agregar marcador en la ubicación del usuario
+            marker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
+
+            // Agregar popup al marcador
+            marker.bindPopup(`
+                <div style="text-align: center; padding: 5px;">
+                    <h3 style="margin: 0 0 8px 0; color: #667eea; font-size: 1.1em;">¡Estás aquí!</h3>
+                    <p style="margin: 0; color: #666; font-size: 0.9em;">
+                        <strong>Lat:</strong> ${lat.toFixed(6)}<br>
+                        <strong>Lng:</strong> ${lng.toFixed(6)}
+                    </p>
+                </div>
+            `).openPopup();
+
+            // Agregar círculo de precisión
+            accuracyCircle = L.circle([lat, lng], {
+                radius: accuracy,
+                color: '#667eea',
+                fillColor: '#667eea',
+                fillOpacity: 0.15,
+                weight: 2,
+                opacity: 0.5
+            }).addTo(map);
+
+            // Ajustar el mapa para mostrar el círculo completo
+            map.fitBounds(accuracyCircle.getBounds());
+        }
+
+        function showError(error) {
+            document.getElementById('loading').style.display = 'none';
+            const mapDiv = document.getElementById('map');
+            mapDiv.style.display = 'block';
+            
+            let errorMsg = '';
+            switch(error.code) {
+                case 1:
+                    errorMsg = "❌ Permiso denegado. Por favor, permite el acceso a tu ubicación en la configuración del navegador.";
+                    break;
+                case 2:
+                    errorMsg = "❌ Información de ubicación no disponible. Verifica tu conexión GPS/WiFi.";
+                    break;
+                case 3:
+                    errorMsg = "❌ Tiempo de espera agotado al obtener la ubicación.";
+                    break;
+                default:
+                    errorMsg = "❌ Tu navegador no soporta geolocalización o ha ocurrido un error desconocido.";
+            }
+            
+            mapDiv.innerHTML = `<div class="error">${errorMsg}</div>`;
+        }
+    </script>
+</body>
+</html>

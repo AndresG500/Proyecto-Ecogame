@@ -1,0 +1,270 @@
+{% extends './about.html' %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{url_for('static', filename='Css/ecogame.css')}}">
+{% endblock %}
+
+{% block content %}
+<section class="container">
+<!-- Barra lateral (Sidebar) -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="fa-solid fa-bars toggle-btn" role="button" aria-expanded="false" aria-label="Toggle sidebar"></i>   
+        </div>
+        <ul class="menu">
+            <!-- Agregada clase "open-modal" para que el botón Inicio sea funcional -->
+            <li class="User-Profile">
+                <img src="../static/Img/User.png" alt="Logo" class="logo-image">
+            </li>
+                <span class="name">Juan Carlos</span>
+            </li>   
+            <!-- Agregada clase "open-modal" para que el botón Información sea funcional -->
+
+            <li class="menu-item open-modal" data-modal="modalConfig">
+                <span class="icon"><i class="fa-solid fa-shirt"></i></span>
+                <span class="text">Vestimenta</span>
+            </li>
+
+            <!-- Agregada clase "open-modal" para que el botón Manual usuario sea funcional -->
+            <li class="menu-item open-modal" data-modal="modalConfig">
+                <span class="icon"><i class="fa-solid fa-book"></i></span>
+                <span class="text">Manual de usuario</span>
+            </li>
+
+            <!-- Agregada clase "open-modal" para que el botón Manual de plataforma sea funcional -->
+            <li class="menu-item open-modal" data-modal="modalContact">
+                <span class="icon"><i class="fa-solid fa-book"></i></span>
+                <span class="text">Manual de pagina</span>
+            </li>
+        </ul>
+        <div class="sidebar-footer">
+            <ul>
+                <!-- Agregada clase "open-modal" y data-modal para que el botón Cerrar Sesión sea funcional -->
+                <li class="logout open-modal" data-modal="modalLogout" role="menuitem">
+                    <span class="icon"><i class="fa-solid fa-sign-out-alt"></i></span>
+                    <span class="text">Cerrar Sesion</span>
+                </li>     
+            </ul>
+        </div>
+    </div>
+
+    <!-- Barra inferior (Bottom Bar) -->
+    <div class="bottom-bar">
+        <!-- Enlaces para abrir modales -->
+        <a href="#" class="open-modal" data-modal="modalOffers"><i class="fa-solid fa-gift"></i></a>
+        <a href="#" class="open-modal" data-modal="modalMap"><i class="fa-solid fa-map"></i></a>
+        <a href="#" class="open-modal" data-modal="modalProfile"><i class="fa-solid fa-shop"></i></a>
+        <a href="#" class="open-modal" data-modal="modalPlay"><i class="fa-solid fa-gamepad"></i></a>
+    </div> 
+
+    <!-- Modal para "Ofertas" -->
+    <div class="modal-overlay" id="modalOffers" aria-hidden="true">
+        <div class="modal">
+            <button class="modal-close" data-modal="modalOffers" aria-label="Cerrar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-body">
+                <!-- PERSONALIZACIÓN: Contenido de ofertas -->
+                <h2>Ofertas Especiales</h2>
+                <p>Aquí puedes mostrar tus ofertas y promociones especiales.</p>
+                
+                <!-- EJEMPLO: Tarjeta de oferta -->
+                <div style="border: 2px solid #047170; border-radius: 10px; padding: 15px; margin: 15px 0;">
+                    <h3 style="color: #047170;">Oferta del Día</h3>
+                    <p>Descripción de la oferta especial</p>
+                    <p style="font-size: 24px; font-weight: bold; color: #047170;">50% OFF</p>
+                </div> 
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para "Mapa" -->
+    <div class="modal-overlay" id="modalMap" aria-hidden="true">
+        <div class="modal modal-large">
+            <button class="modal-close" data-modal="modalMap" aria-label="Cerrar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-body">
+                <!-- PERSONALIZACIÓN: Contenido del mapa -->
+                <h2 class="modal-title">MAPA</h2>
+                <div class="modal-content-grid">
+                    <!-- Columna izquierda: Lista de ubicaciones -->
+                    <div class="modal-text-column1">
+                        <ul class="location-list">
+                            <li>UCC</li>
+                            <li>COLEGIO X</li>
+                            <li>COLEGIO Y</li>
+                            <li>COLEGIO R</li>
+                        </ul>
+                    </div>
+                    <!-- Columna derecha: Mapa -->
+                    <div class="modal-image-column1">
+                        <!-- Reemplaza con tu propio mapa embebido o imagen -->
+                        <div class="map-placeholder">
+                            <img src="/placeholder.svg?height=300&width=400" alt="Mapa de ubicaciones" class="modal-image">
+                        </div>
+                        <!-- EJEMPLO: Para usar Google Maps real, descomenta esto y agrega tu URL de embed -->
+                        <!-- <iframe 
+                            src="https://www.google.com/maps/embed?pb=TU_URL_AQUI" 
+                            width="100%" 
+                            height="100%" 
+                            style="border:0; border-radius: 8px;" 
+                            allowfullscreen="" 
+                            loading="lazy">
+                        </iframe> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para "Perfil" (desde bottom-bar) -->
+    <div class="modal-overlay" id="modalProfile" aria-hidden="true">
+        <div class="modal">
+            <button class="modal-close" data-modal="modalProfile" aria-label="Cerrar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-body">
+                <!-- PERSONALIZACIÓN: Información del perfil -->
+                <h2>Mi Perfil</h2>
+                <p>Información del usuario y estadísticas.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para "Reproducir" -->
+    <div class="modal-overlay" id="modalPlay" aria-hidden="true">
+        <div class="modal">
+            <button class="modal-close" data-modal="modalPlay" aria-label="Cerrar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-body">
+                <!-- PERSONALIZACIÓN: Contenido de reproducción -->
+                <h2>Reproducir Contenido</h2>
+                <p>Aquí puedes agregar videos, juegos o contenido multimedia.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para "Información" -->
+    <div class="modal-overlay" id="modalInfo" aria-hidden="true">
+        <div class="modal">
+            <button class="modal-close" data-modal="modalInfo" aria-label="Cerrar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-body">
+                <!-- PERSONALIZACIÓN: Información general -->
+                <h2>Información</h2>
+                <p>Este es el contenido de Información. Puedes agregar más detalles aquí.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para "Configuración" (Manual usuario) -->
+    <div class="modal-overlay" id="modalConfig" aria-hidden="true">
+        <div class="modal modal-large">
+            <button class="modal-close" data-modal="modalConfig" aria-label="Cerrar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-body">
+                <!-- PERSONALIZACIÓN: Manual de usuario -->
+                <h2 class="modal-title">Manual de Usuario</h2>
+                <div class="modal-content-grid">
+                    <div class="modal-image-column"> <!-- imagen izquierda -->
+                        <!-- Reemplaza esta imagen con tu propia imagen -->
+                        <img src="/placeholder.svg?height=300&width=400" alt="Ilustración del manual" class="modal-image">
+                    </div>
+                    <!-- Columna derecha: Texto -->
+                    <div class="modal-text-column">
+                        <p>Aquí puedes agregar el contenido de texto del manual.</p>
+                        <p>Puedes incluir instrucciones, pasos a seguir, o cualquier información relevante.</p>
+                        <p>Este es un ejemplo de cómo se vería el texto en la columna izquierda.</p>
+                    </div>
+                    <!-- Columna derecha: Imagen o contenido visual -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para "Contacto" (Manual de plataforma) -->
+    <div class="modal-overlay" id="modalContact" aria-hidden="true">
+        <div class="modal modal-large">
+            <button class="modal-close" data-modal="modalContact" aria-label="Cerrar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-body">
+                <!-- PERSONALIZACIÓN: Manual de plataforma -->
+                <h2 class="modal-title">MANUAL DE PLATAFORMA</h2>
+                <div class="modal-content-grid">
+                    <!-- Imagen lado izquierdo-->
+                    <div class="modal-image-column">
+                        <img src="{{ url_for('static', filename='Img/Manual.png') }}" alt="Guía de la plataforma" class="modal-image">
+                    </div>
+                    <!-- Columna derecha: Texto -->
+                    <div class="modal-text-column">
+                        <p>Información sobre cómo usar la plataforma.</p>
+                        <p>Características principales y funcionalidades.</p>
+                        <p>Guía paso a paso para aprovechar al máximo la plataforma.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NUEVO Modal para "Perfil" (desde sidebar-footer) -->
+    <div class="modal-overlay" id="modalUserProfile" aria-hidden="true">
+        <div class="modal">
+            <button class="modal-close" data-modal="modalUserProfile" aria-label="Cerrar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-body">
+                <!-- PERSONALIZACIÓN: Perfil de usuario completo -->
+                <h2>Mi Perfil de Usuario</h2>
+                <p>Gestiona tu información personal y preferencias.</p>
+                
+                <!-- EJEMPLO: Formulario de perfil -->
+                <form style="margin: 20px 0;">
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Nombre:</label>
+                        <input type="text" placeholder="Tu nombre" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Email:</label>
+                        <input type="email" placeholder="tu@email.com" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                    <button type="submit" style="background-color: #047170; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+                        Guardar Cambios
+                    </button>
+                </form> 
+            </div>
+        </div>
+    </div>
+
+    <!-- NUEVO Modal para "Cerrar Sesión" -->
+    <div class="modal-overlay" id="modalLogout" aria-hidden="true">
+        <div class="modal">
+            <button class="modal-close" data-modal="modalLogout" aria-label="Cerrar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-body">
+                <!-- PERSONALIZACIÓN: Confirmación de cierre de sesión -->
+                <h2>Cerrar Sesión</h2>
+                <p>¿Estás seguro de que deseas cerrar sesión?</p>
+                
+                <!-- EJEMPLO: Botones de confirmación -->
+                <div style="display: flex; gap: 10px; margin-top: 20px; justify-content: center;">
+                    <button onclick="alert('Sesión cerrada')" style="background-color: #047170; color: white; padding: 10px 30px; border: none; border-radius: 5px; cursor: pointer;">
+                        Sí, cerrar sesión
+                    </button>
+                    <button class="modal-close" data-modal="modalLogout" style="background-color: #ccc; color: #333; padding: 10px 30px; border: none; border-radius: 5px; cursor: pointer;">
+                        Cancelar
+                    </button>
+                </div> 
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="{{url_for('static', filename='Js/ecogame.js')}}"></script>
+
+{% endblock %}

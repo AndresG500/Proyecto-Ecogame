@@ -1,0 +1,380 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.container {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  background-color: #f0f4f3;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #047170;
+  color: #fff;
+  height: 100vh;
+  overflow: hidden;
+  box-shadow: 2px 0 5px rgba(26, 25, 25, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  /* Transición más suave con duración mayor y múltiples propiedades */
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar .logo {
+  width: 40px;
+  height: auto;
+  margin-right: 10px;
+}
+
+.sidebar.collapsed {
+  width: 80px;
+}
+
+.sidebar .sidebar-header {
+  display: flex;
+  align-items: center;
+  padding: 25px 30px;
+  gap: 10px;
+  position: relative;
+  justify-content: flex-start;
+}
+
+.sidebar .collapsed .sidebar-header {
+  position: absolute;
+  right: -80px;
+}
+
+.sidebar-header h1 {
+  /* Tamaño de texto ajustado a 18px */
+  font-size: 18px;
+  /* Transición más suave para el título */
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-left: 40px;
+}
+
+.name{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    font-size: 18px;
+}
+
+.toggle-btn {
+  padding: 8px 10px;
+  border-radius: 5px;
+  /* Tamaño de ícono ajustado a 18px */
+  font-size: 18px;
+  /* Transición más suave para el botón */
+  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s ease;
+  cursor: pointer;
+  position: absolute;
+  top: 15px;
+  left: 15px;
+}
+
+.toggle-btn:hover {
+  background-color: rgb(15, 123, 126);
+  /* Efecto de escala al hacer hover */
+  transform: scale(1.05);
+}
+
+.sidebar ul {
+  padding: 10px 0;
+  list-style: none;
+}
+
+.sidebar ul .active {
+  color: rgb(19, 18, 19);
+}
+
+.sidebar li {
+  display: flex;
+  align-items: center;
+  /* Padding ajustado para mejor centrado vertical */
+  padding: 18px 30px;
+  cursor: pointer;
+  border-radius: 8px;
+  /* Transición más suave para los items del menú */
+  transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s ease;
+  margin: 10px 0;
+}
+
+.sidebar li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  /* Efecto de desplazamiento al hacer hover */
+  transform: translateX(5px);
+}
+
+.sidebar .icon {
+  width: 30px;
+  /* Tamaño de ícono ajustado a 18px */
+  font-size: 18px;
+  text-align: center;
+  cursor: pointer;
+  margin-right: 10px;
+  /* Transición más suave para los íconos */
+  transition: margin-right 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s ease;
+  /* Centrado vertical del ícono */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ImagenLogo {
+  width: 100px;
+  height: auto;
+  margin-right: 10px;
+  display: inline-block;
+}
+
+.ImagenLogo + .text {
+  /* Tamaño de texto ajustado a 18px */
+  font-size: 18px;
+  color: #fff;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 10px;
+}
+
+.sidebar .text {
+  /* Tamaño de texto ajustado a 16px (dentro del rango 15-18px) */
+  font-size: 16px;
+  /* Transición más suave para el texto */
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
+  /* Centrado vertical del texto */
+  display: flex;
+  align-items: center;
+}
+
+.sidebar.collapsed .text {
+  display: none;
+}
+
+.sidebar.collapsed .icon {
+  margin-right: 0;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-footer ul {
+  padding: 10px 0;
+  list-style: none;
+}
+
+.sidebar-footer li {
+  display: flex;
+  align-items: center;
+  /* Padding ajustado para mejor centrado */
+  padding: 18px 30px;
+  cursor: pointer;
+  border-radius: 8px;
+  /* Transición más suave */
+  transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s ease;
+}
+
+.sidebar-footer li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  /* Efecto de desplazamiento al hacer hover */
+  transform: translateX(5px);
+}
+
+.sidebar-footer .icon {
+  width: 30px;
+  /* Tamaño de ícono ajustado a 18px */
+  font-size: 18px;
+  text-align: center;
+  margin-right: 10px;
+  /* Transición más suave */
+  transition: margin-right 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Centrado vertical del ícono */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-footer .text {
+  /* Tamaño de texto ajustado a 16px (dentro del rango 15-18px) */
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Estilos mejorados para el perfil de usuario */
+.User-Profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px 30px;
+  margin: 10px 0;
+}
+
+.logo-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.logo-image:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.text1 {
+  /* Tamaño de texto ajustado a 16px */
+  font-size: 16px;
+  color: #fff;
+  font-weight: 500;
+  text-align: center;
+  /* Transición suave */
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Ocultar el nombre de usuario cuando el sidebar está colapsado */
+.sidebar.collapsed .text1 {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+  }
+  .sidebar.collapsed {
+    width: 60px;
+  }
+}
+
+/*bottom bar*/
+.bottom-bar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 20px;
+  width: 450px;
+  height: 60px;
+  background-color: #047170;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  border-radius: 24px;
+}
+
+.bottom-bar a {
+  color: #fff;
+  margin-left: 20px;
+  font-size: 1.5em;
+  text-decoration: none;
+  /* Transición suave para los enlaces */
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.bottom-bar a:hover {
+  color: #0f0f0f;
+  transform: scale(1.1);
+}
+
+/* ===== Modal genérico ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  /* Transición suave para el overlay */
+  transition: opacity 0.3s ease;
+}
+
+.modal-overlay.is-open {
+  display: flex;
+}
+
+.modal {
+  background: #fff;
+  width: min(100vw, 720px);
+  min-height: 260px;
+  border-radius: 18px;
+  box-shadow: 0 15px 100px rgba(0, 0, 0, 0.1);
+  position: relative;
+  padding: 24px;
+  /* Transición suave para el modal */
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #047170;
+  border: none;
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 18px;
+  /* Transición suave para el botón de cierre */
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.modal-close:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+}
+
+.modal-body {
+  width: 100%;
+  height: 100%;
+  border: 2px dashed #e5e7eb;
+  border-radius: 12px;
+}
+
+.modal-text-column {
+  flex: 2;
+  text-align: right;
+  /* Tamaño de texto ajustado a 15px */
+  font-size: 15px;
+  line-height: 1.6;
+  padding: 20px;
+  overflow-y: auto;
+  max-height: 400px;
+  color: #333;
+}
+
+.modal-image-column {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 30px;
+}
+
+.modal-image {
+  width: 300px;
+  height: 350px;
+  object-fit: cover;
+  margin-left: 0px;
+}
