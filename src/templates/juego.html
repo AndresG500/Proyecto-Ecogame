@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='Css/inicio.css')}}">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <div class="container-header">
+            <div class="container-user">
+                <button id="userButton">
+                    <i class="fa-solid fa-user"></i>
+                    Usuario
+                </button>
+            </div>
+
+            <div class="container-event">
+                <button>
+                    <i class="fa-solid fa-shirt"></i>
+                </button>
+            </div>
+
+            <div class="container-event">
+                <button>
+                    <i class="fa-solid fa-shop"></i>
+                </button>
+            </div>
+
+            <div class="container-event">
+                <button>
+                    <i class="fa-solid fa-gamepad"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="container">
+            <figure>
+                <img src="../static/Img/logo.png" alt="fondo" class="logo">
+            </figure>
+            <p>Encuentra la caneca mas caercana</p>
+            <div class="status" id="status">Buscando tu ubicacion</div>
+        </section>
+
+        <div class="info-panel">
+            <div class="stats-grid">
+                <div class="stat">
+                    <div class="stat-value" id="user-lat">--</div>
+                    <div class="stat-label">Tu Latitud</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="user-lon">--</div>
+                    <div class="stat-label">Tu Longitud</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="distance">--</div>
+                    <div class="stat-label">Distancia (metros)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="map-container">
+            <h3 class="map-title">📍 Mapa de Ubicaciones</h3>
+            <div id="map"></div>
+            <div class="map-controls">
+                <button class="btn" onclick="centerOnESP32()">📡 Ver Canecas</button>
+                <button class="btn" onclick="centerOnUser()">👤 Ver Mi Ubicación</button>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="{{url_for('static', filename='Js/aparecer.js')}}"></script>
+    <script src="{{url_for('static', filename='Js/mapa.js')}}"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+</body>
+</html>

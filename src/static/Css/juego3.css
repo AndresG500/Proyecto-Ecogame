@@ -1,0 +1,102 @@
+.imagen {
+  width: 85vw;
+  height: 100vh;
+  object-fit: cover;
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.contenedor {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding-top: 2rem;
+}
+
+.reiniciar {
+  padding: 15px 25px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #4caf50;
+  color: rgb(255, 255, 255);
+  border: none;
+  border-radius: 5px;
+  margin-top: 535px;
+  margin-left: 175px;
+}
+
+.tablero {
+  position: fixed;
+  top: 50%;
+  left: 57%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 110px);
+  gap: 10px;
+  z-index: 2;
+  background: none;
+}
+
+.casilla {
+  width: 100px;
+  height: 110px;
+  cursor: pointer;
+  z-index: 3;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.casilla:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.ficha-btn {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* Ocultar las fichas que están en el div .fichas para que no aparezcan visibles */
+.fichas {
+  display: none;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-contenido {
+  background: #fff;
+  margin: 15% auto;
+  padding: 30px;
+  border-radius: 10px;
+  width: 300px;
+  text-align: center;
+  position: relative;
+}
+
+.cerrar {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 28px;
+  cursor: pointer;
+}
