@@ -1,9 +1,12 @@
-const HUMAN = "X"
-const AI = "O"
+// ============================================
+// CONSTANTES DEL JUEGO
+// ============================================
 
-let tablero = Array(9).fill(null)
-let juegoTerminado = false
-let bloqueado = false
+const HUMAN = "X";
+const AI = "O";
+
+const POINTS_PER_WIN = 50;
+const MAX_LIVES = 3;
 
 const WINNERS = [
   [0, 1, 2],
@@ -14,121 +17,298 @@ const WINNERS = [
   [2, 5, 8],
   [0, 4, 8],
   [2, 4, 6],
-]
+];
 
-const botones = Array.from(document.querySelectorAll(".tablero .casilla"))
+// ============================================
+// VARIABLES DEL JUEGO
+// ============================================
 
-// Dibuja la ficha en el tablero visual
+let tablero = Array(9).fill(null);
+let juegoTerminado = false;
+let bloqueado = false;
+let currentLives = MAX_LIVES;
+let sessionPoints = 0;
+
+// ============================================
+// ELEMENTOS DEL DOM
+// ============================================
+
+const botones = Array.from(document.querySelectorAll(".tablero .casilla"));
+const livesCounter = document.getElementById("livesCounter");
+const pointsCounter = document.getElementById("pointsCounter");
+const sessionPointsDisplay = document.getElementById("sessionPoints");
+const gameOverModal = document.getElementById("gameOverModal");
+const playAgainBtn = document.getElementById("playAgainBtn");
+const finalSessionPoints = document.getElementById("finalSessionPoints");
+
+// ============================================
+// FUNCIONES DE LOCALSTORAGE
+// ============================================
+
+function cargarDatos() {
+  const datos = localStorage.getItem('ecoGameUser');
+  if (datos) {
+    return JSON.parse(datos);
+  }
+  return {
+    puntos: 0,
+    inventario: [],
+    skinEquipada: null
+  };
+}
+
+function guardarDatos(datos) {
+  localStorage.setItem('ecoGameUser', JSON.stringify(datos));
+}
+
+function agregarPuntos(cantidad) {
+  const datos = cargarDatos();
+  datos.puntos += cantidad;
+  guardarDatos(datos);
+  actualizarPuntosDisplay();
+}
+
+function actualizarPuntosDisplay() {
+  const datos = cargarDatos();
+  if (pointsCounter) {
+    pointsCounter.textContent = datos.puntos;
+  }
+}
+
+// ============================================
+// INICIALIZACIÓN
+// ============================================
+
+document.addEventListener('DOMContentLoaded', function() {
+  actualizarPuntosDisplay();
+  livesCounter.textContent = currentLives;
+  sessionPointsDisplay.textContent = sessionPoints;
+  render();
+});
+
+// Event listener para el botón de jugar de nuevo
+if (playAgainBtn) {
+  playAgainBtn.addEventListener("click", () => {
+    resetearTodoElJuego();
+  });
+}
+
+// ============================================
+// FUNCIONES DE RENDERIZADO
+// ============================================
+
 function pintaFicha(idx, quien) {
-  const btn = botones[idx]
-  if (!btn) return
-  btn.innerHTML = ""
+  const btn = botones[idx];
+  if (!btn) return;
+  btn.innerHTML = "";
   if (quien === HUMAN) {
-    btn.innerHTML = '<img src="image/fichax.png" alt="X" class="ficha-btn">'
-    btn.setAttribute("aria-label", "X")
+    btn.innerHTML = '<img src="../static/Img/fichax.png" alt="X" class="ficha-btn">';
+    btn.setAttribute("aria-label", "X");
   } else if (quien === AI) {
-    btn.innerHTML = '<img src="image/fichao.png" alt="O" class="ficha-btn">'
-    btn.setAttribute("aria-label", "O")
+    btn.innerHTML = '<img src="../static/Img/fichao.png" alt="O" class="ficha-btn">';
+    btn.setAttribute("aria-label", "O");
   } else {
-    btn.removeAttribute("aria-label")
+    btn.removeAttribute("aria-label");
   }
-  btn.disabled = tablero[idx] !== null || juegoTerminado
+  btn.disabled = tablero[idx] !== null || juegoTerminado;
 }
 
-// Actualiza el tablero visual
 function render() {
-  tablero.forEach((val, i) => pintaFicha(i, val))
+  tablero.forEach((val, i) => pintaFicha(i, val));
   if (juegoTerminado) {
-    botones.forEach((b) => (b.disabled = true))
+    botones.forEach((b) => (b.disabled = true));
   } else {
-    botones.forEach((b, i) => (b.disabled = tablero[i] !== null || bloqueado))
+    botones.forEach((b, i) => (b.disabled = tablero[i] !== null || bloqueado));
   }
 }
 
-// Verifica si hay ganador
+// ============================================
+// LÓGICA DEL JUEGO
+// ============================================
+
 function hayGanador(tab) {
   for (const [a, b, c] of WINNERS) {
     if (tab[a] && tab[a] === tab[b] && tab[a] === tab[c]) {
-      return tab[a]
+      return tab[a];
     }
   }
-  return null
+  return null;
 }
 
-// Verifica si el tablero está lleno
 function tableroLleno(tab) {
-  return tab.every((c) => c !== null)
+  return tab.every((c) => c !== null);
 }
 
-// Muestra el mensaje en el modal flotante
-function mostrarModal(mensaje) {
-  document.getElementById("texto-modal").textContent = mensaje
-  document.getElementById("modal-mensaje").style.display = "block"
+function mostrarModal(mensaje, tipo) {
+  const iconoDiv = document.getElementById("icono-resultado");
+  
+  if (tipo === 'win') {
+    iconoDiv.innerHTML = '<i class="fa-solid fa-trophy" style="color: #4caf50;"></i>';
+  } else if (tipo === 'lose') {
+    iconoDiv.innerHTML = '<i class="fa-solid fa-face-sad-tear" style="color: #ff4757;"></i>';
+  } else {
+    iconoDiv.innerHTML = '<i class="fa-solid fa-handshake" style="color: #FFD700;"></i>';
+  }
+  
+  document.getElementById("texto-modal").textContent = mensaje;
+  document.getElementById("modal-mensaje").style.display = "block";
 }
 
 document.getElementById("cerrar-modal").onclick = () => {
-  document.getElementById("modal-mensaje").style.display = "none"
-}
+  document.getElementById("modal-mensaje").style.display = "none";
+  
+  // Si perdió todos los intentos, mostrar game over
+  if (currentLives <= 0) {
+    setTimeout(() => {
+      showGameOver();
+    }, 300);
+  }
+};
 
-// Finaliza el juego si corresponde
 function finalizarSiCorresponde() {
-  const ganador = hayGanador(tablero)
+  const ganador = hayGanador(tablero);
   if (ganador) {
-    juegoTerminado = true
-    render()
+    juegoTerminado = true;
+    render();
+    
     if (ganador === HUMAN) {
-      mostrarModal("¡Ganaste! 🎉")
+      // Usuario gana
+      sessionPoints += POINTS_PER_WIN;
+      sessionPointsDisplay.textContent = sessionPoints;
+      agregarPuntos(POINTS_PER_WIN);
+      showPointsAnimation(POINTS_PER_WIN);
+      mostrarModal("¡Ganaste! 🎉", 'win');
     } else {
-      mostrarModal("La máquina gana 🤖")
+      // Máquina gana - pierde una vida
+      currentLives--;
+      livesCounter.textContent = currentLives;
+      animateLifeLoss();
+      mostrarModal("La máquina gana 🤖", 'lose');
     }
-    return
+    return;
   }
+  
   if (tableroLleno(tablero)) {
-    juegoTerminado = true
-    render()
-    mostrarModal("¡Empate! 😐")
+    juegoTerminado = true;
+    render();
+    mostrarModal("¡Empate! 😐", 'tie');
   }
 }
 
-// La máquina juega de forma aleatoria y sencilla
 function turnoIA() {
-  bloqueado = true
-  render()
+  bloqueado = true;
+  render();
+  
   setTimeout(() => {
-    // Busca casillas libres
-    const libres = tablero.map((v, i) => (v === null ? i : null)).filter((i) => i !== null)
+    const libres = tablero.map((v, i) => (v === null ? i : null)).filter((i) => i !== null);
     if (libres.length === 0 || juegoTerminado) {
-      bloqueado = false
-      render()
-      return
+      bloqueado = false;
+      render();
+      return;
     }
-    // Elige una casilla libre al azar
-    const idx = libres[Math.floor(Math.random() * libres.length)]
-    tablero[idx] = AI
-    bloqueado = false
-    render()
-    finalizarSiCorresponde()
-  }, 500)
+    
+    // IA mejorada con estrategia básica
+    let idx = buscarJugadaGanadora(AI);
+    if (idx === -1) idx = buscarJugadaGanadora(HUMAN);
+    if (idx === -1) {
+      // Si no hay jugada crítica, jugar al azar
+      idx = libres[Math.floor(Math.random() * libres.length)];
+    }
+    
+    tablero[idx] = AI;
+    bloqueado = false;
+    render();
+    finalizarSiCorresponde();
+  }, 500);
 }
 
-// Cuando el usuario marca una celda
+function buscarJugadaGanadora(jugador) {
+  for (const [a, b, c] of WINNERS) {
+    const linea = [tablero[a], tablero[b], tablero[c]];
+    const vacias = [a, b, c].filter(i => tablero[i] === null);
+    const cuenta = linea.filter(v => v === jugador).length;
+    
+    if (cuenta === 2 && vacias.length === 1) {
+      return vacias[0];
+    }
+  }
+  return -1;
+}
+
 window.marcarCelda = (numero) => {
-  if (juegoTerminado || bloqueado) return
-  const i = Number(numero) - 1
-  if (i < 0 || i > 8) return
-  if (tablero[i] !== null) return
-  tablero[i] = HUMAN
-  render()
-  finalizarSiCorresponde()
-  if (!juegoTerminado) turnoIA()
-}
+  if (juegoTerminado || bloqueado || currentLives <= 0) return;
+  const i = Number(numero) - 1;
+  if (i < 0 || i > 8) return;
+  if (tablero[i] !== null) return;
+  
+  tablero[i] = HUMAN;
+  render();
+  finalizarSiCorresponde();
+  if (!juegoTerminado) turnoIA();
+};
 
-// Reinicia el juego
 window.reiniciarJuego = () => {
-  tablero = Array(9).fill(null)
-  juegoTerminado = false
-  bloqueado = false
-  render()
+  if (currentLives <= 0) return; // No puede reiniciar si no tiene vidas
+  
+  tablero = Array(9).fill(null);
+  juegoTerminado = false;
+  bloqueado = false;
+  render();
+};
+
+// ============================================
+// ANIMACIONES Y EFECTOS
+// ============================================
+
+function showPointsAnimation(points) {
+  const animation = document.createElement('div');
+  animation.className = 'points-animation';
+  animation.innerHTML = `<i class="fa-solid fa-star"></i> +${points} puntos`;
+  document.body.appendChild(animation);
+  
+  setTimeout(() => {
+    animation.remove();
+  }, 2000);
 }
 
-render()
+function animateLifeLoss() {
+  const livesDisplay = document.querySelector('.lives-display');
+  livesDisplay.style.animation = 'none';
+  setTimeout(() => {
+    livesDisplay.style.animation = '';
+  }, 10);
+}
+
+// ============================================
+// GAME OVER Y REINICIO TOTAL
+// ============================================
+
+function showGameOver() {
+  finalSessionPoints.textContent = sessionPoints;
+  gameOverModal.style.display = 'flex';
+  juegoTerminado = true;
+  bloqueado = true;
+  render();
+}
+
+function resetearTodoElJuego() {
+  // Reiniciar todas las variables
+  currentLives = MAX_LIVES;
+  sessionPoints = 0;
+  tablero = Array(9).fill(null);
+  juegoTerminado = false;
+  bloqueado = false;
+  
+  // Actualizar displays
+  livesCounter.textContent = currentLives;
+  sessionPointsDisplay.textContent = sessionPoints;
+  
+  // Cerrar modal
+  gameOverModal.style.display = 'none';
+  
+  // Re-renderizar tablero
+  render();
+}
+
+// Inicializar
+render();
